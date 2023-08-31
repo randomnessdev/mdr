@@ -19,7 +19,7 @@
             </GoogleMap>
         </div>
         <div class="top-0 left-0 min-w-full pointer-events-none md:absolute inline-flex-w-full">
-            <div class="max-w-screen-xl px-24 mx-auto">
+            <div class="w-full max-w-screen-xl mx-auto md:px-24">
             <ul class="box-content flex flex-col w-full md:w-4/12">
                 <li class="flex flex-col pointer-events-auto bg-white/75">
                     <span class="px-4 py-3 text-3xl text-white uppercase bg-gray-600"><b>31.</b> Haute-Garonne</span>

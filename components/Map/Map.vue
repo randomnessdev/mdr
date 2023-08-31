@@ -11,7 +11,7 @@
                 }" :position="m.position" :clickable="true" :draggable="false" v-model="selected"
                     @click="selected = m;">
                     <InfoWindow :open="true" v-on:closeclick="resetInfoWindow(m)"
-                        class="flex items-center gap-4 p-2 px-8 font-bold text-white bg-primary-950 rounded-3xl font-body">
+                        class="inline-flex items-center gap-4 p-2 px-8 font-bold text-white bg-primary-950 rounded-3xl font-body">
                         <a :href="m.href" class="flex items-center gap-4"> {{ m.nom_social }} <img
                                 src="~/assets/img/picto-add.svg" alt="Picto add"></a>
                     </InfoWindow>
@@ -217,10 +217,14 @@ function resetInfoWindow(marker) {
 }
 
 .gm-style-iw {
-    padding: 0 !important;
+    padding: 0 0 0 0 !important;
     border-radius: 2rem !important;
+    display: inline;
 }
-
+.gm-style-iw-d {
+    display: inline !important;
+    width: 100%;
+}
 .gm-style-iw-tc:after {
     background: #0A1527 !important
 }

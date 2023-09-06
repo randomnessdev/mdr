@@ -32,7 +32,7 @@ $(document).ready(function () {
 
   // add a section after the title with a class named "steps"
   $(".container").prepend(
-    '<section class=\'stepper\'><div class="active step-select stepper-0">Vos informations</div><div class=\"step-select stepper-1">Vos informations complémentaires</div><div class="step-select stepper-2">Vos besoins</div></section>'
+    '<section class=\'stepper\'><div class="active step-select stepper-0">Vos informations</div><div class="step-select stepper-1">Vos informations complémentaires</div><div class="step-select stepper-2">Vos besoins</div></section>'
   );
   // add a title to the page at the begining of the main element
   $(".container").prepend("<h1>Devis en ligne</h1>");
@@ -45,23 +45,27 @@ $(document).ready(function () {
   $(".step-select ").click(function () {
     // get the class that was clicked that contains the step number
     let step = $(this).attr("class").split(" ")[1].split("-")[1];
+    // step to int
+    step = parseInt(step);
+    console.log("step: " + step);
     // change the step to the one that was clicked
-    if ($("form[name='devis']")[0].reportValidity()) {
-    changeStep(currentStep, step);
+    if (currentStep > step || $("form[name='devis']")[0].reportValidity() ) {
+      console.log(step);
+      console.log(currentStep);
+      changeStep(currentStep, step);
     } else {
       console.log("Fields have not been filled correctly");
       // create a toast for 2 seconds saying "Please fill the required fields before changing step"
       let toast = document.createElement("div");
       toast.classList.add("custom-toast");
-      toast.innerHTML = "Veuillez remplir les champs requis avant de changer d'étape";
+      toast.innerHTML =
+        "Veuillez remplir les champs requis avant de changer d'étape";
       document.body.appendChild(toast);
       setTimeout(() => {
         document.body.removeChild(toast);
       }, 2000);
-
     }
   });
-
 
   // add the "*Champs requis" text after the button
   $(".next-step").after('<p class="required-info">*Champs requis</p>');
@@ -69,18 +73,18 @@ $(document).ready(function () {
   // hide #devis_save parent
   $("#devis_save").parent().hide();
 
-
-  $
+  $;
 
   function changeStep(from, to) {
-    if ($("form[name='devis']")[0].reportValidity()) {
+    if ($("form[name='devis']")[0].reportValidity() ||from > to) {
       // add a class to the form named "step-" + (currentClass + 1)
-      $("form").removeClass("step-" + from);
+      currentStep = from;
+      $("form").removeClass("step-" + currentStep);
       $(".step-" + currentStep + " input").prop("disabled", true);
-      $(".step-1 select").prop("disabled", true);
+      $(".step-" + currentStep + " select").prop("disabled", true);
       $(".step-element").removeClass("active");
 
-      to ? (currentStep = to) : currentStep++;
+      currentStep = to;
 
       $(".step-element.step-" + currentStep).addClass("active");
       $(".step-" + currentStep + " input").prop("disabled", false);
@@ -99,6 +103,10 @@ $(document).ready(function () {
         $(".step-0 select").prop("disabled", false);
         $(".step-1 input").prop("disabled", false);
         $(".step-1 select").prop("disabled", false);
+      } else {
+        $("#devis_save").parent().removeClass("save-container");
+        $("#devis_save").parent().hide();
+        $(".next-step").show();
       }
     } else {
       console.log("Fields have not been filled correctly");
@@ -107,6 +115,7 @@ $(document).ready(function () {
 
   $(".next-step").click(function () {
     changeStep(currentStep, currentStep + 1);
+    console.log(currentStep)
   });
   // add event listener and prevent for enter key
   $("form[name='devis']").on("keypress", function (e) {

@@ -1,86 +1,89 @@
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
   let currentStep = 0;
 
-  // Target form
-  const form = document.querySelector("form[name='devis']");
-  const formChildren = Array.from(form.children);
+  // Display the form in 3 steps by adding classes to the form elements
+  // /!\  This could break if some elements are added or removed from the form  /!\
+  // In case of changes, edit the slice() functions below to match the new number of elements
 
-  // Add classes
-  formChildren.slice(1, 15).forEach(element => {
-    element.classList.add("step-element", "step-0", "active");
-  });
+  $("form[name='devis']")
+    .children()
+    .slice(1, 15)
+    .addClass("step-element step-0")
+    .addClass("active");
 
-  formChildren.slice(15, 20).forEach(element => {
-    element.classList.add("step-element", "step-1");
-  });
+  $("form[name='devis']")
+    .children()
+    .slice(15, 20)
+    .addClass("step-element step-1");
 
-  formChildren.slice(20, 24).forEach(element => {
-    element.classList.add("step-element", "step-2");
-  });
+  $("form[name='devis']")
+    .children()
+    .slice(20, 24)
+    .addClass("step-element step-2");
 
-  // Disable inputs and selects
-  document.querySelectorAll('.step-1 input, .step-1 select, .step-2 input, .step-2 select').forEach(element => {
-    element.disabled = true;
-  });
+  // disabling inputs and selects to facilitate the reportValidity() function
+  $(".step-1 input").prop("disabled", true);
+  $(".step-1 select").prop("disabled", true);
+  $(".step-2 input").prop("disabled", true);
+  $(".step-2 select").prop("disabled", true);
 
-  // Hide extra address inputs
-  formChildren.slice(12, 14).forEach(element => {
-    element.style.display = "none";
-  });
+  // hide children 13 & 14 (extra addresses inputs) of the form
+  $("form[name='devis']").children().slice(12, 14).hide();
 
-  // Add sections and titles
-  const container = document.querySelector('.container');
-  container.insertAdjacentHTML('afterbegin', "<section class='stepper'><div class=\"active\">Vos informations</div><div>Vos informations complémentaires</div><div>Vos besoins</div></section>");
-  container.insertAdjacentHTML('afterbegin', "<h1>Devis en ligne</h1>");
+  // add a section after the title with a class named "steps"
+  $(".container").prepend(
+    "<section class='stepper'><div class=\"active\">Vos informations</div><div>Vos informations complémentaires</div><div>Vos besoins</div></section>"
+  );
+  // add a title to the page at the begining of the main element
+  $(".container").prepend("<h1>Devis en ligne</h1>");
 
-  // Add buttons
-  form.insertAdjacentHTML('afterend', "<button class='next-step'>Étape suivante</button>");
-  document.querySelector('.next-step').insertAdjacentHTML('afterend', '<p class="required-info">*Champs requis</p>');
+  // add a button after the form with a class named "next-step" that triggers reportValidity() on the form, if it returns true, the next step is displayed (currentStep = 1)
+  $("form[name='devis']").after(
+    "<button class='next-step'>Ėtape suivante</button>"
+  );
 
-  // Hide save button parent
-  document.querySelector('#devis_save').parentElement.style.display = "none";
+  // add the "*Champs requis" text after the button
+  $(".next-step").after('<p class="required-info">*Champs requis</p>');
 
-  document.querySelector('.next-step').addEventListener('click', function () {
-    if (form.reportValidity()) {
-      form.classList.remove("step-" + currentStep);
-      
-      document.querySelectorAll('.step-' + currentStep + ' input, .step-' + currentStep + ' select').forEach(element => {
-        element.disabled = true;
-      });
+  // hide #devis_save parent
+  $("#devis_save").parent().hide();
+
+  $(".next-step").click(function () {
+    if ($("form[name='devis']")[0].reportValidity()) {
+      // add a class to the form named "step-" + (currentClass + 1)
+      $("form").removeClass("step-" + currentStep);
+      $(".step-" + currentStep + " input").prop("disabled", true);
+      $(".step-1 select").prop("disabled", true);
 
       currentStep += 1;
 
-      document.querySelectorAll('.step-element').forEach(element => {
-        element.classList.remove('active');
-      });
+      $(".step-element").removeClass("active");
+      $(".step-element.step-" + currentStep).addClass("active");
+      $(".step-" + currentStep + " input").prop("disabled", false);
+      $(".step-" + currentStep + " select").prop("disabled", false);
+      $(".stepper div").removeClass("active");
+      $(".stepper div").eq(currentStep).addClass("active");
+      //remove the class "step-" + (currentClass)
+      $("form").addClass("step-" + currentStep);
 
-      document.querySelectorAll('.step-' + currentStep).forEach(element => {
-        element.classList.add('active');
-      });
-
-      document.querySelectorAll('.step-' + currentStep + ' input, .step-' + currentStep + ' select').forEach(element => {
-        element.disabled = false;
-      });
-
-      document.querySelectorAll('.stepper div').forEach(element => {
-        element.classList.remove('active');
-      });
-
-      document.querySelectorAll('.stepper div')[currentStep].classList.add('active');
-      form.classList.add("step-" + currentStep);
-
-      if (currentStep === 2) {
-        document.querySelector("#devis_save").parentElement.classList.add('save-container');
-        document.querySelector("#devis_save").parentElement.style.display = "block";
-        document.querySelector(".next-step").style.display = "none";
+      // check if currentStep is the last one (2) to display virtual button or the orginial button, an remove the disabled on the inputs and selects of previous steps
+      if (currentStep == 2) {
+        $("#devis_save").parent().addClass("save-container");
+        $("#devis_save").parent().show();
+        $(".next-step").hide();
+        $(".step-0 input").prop("disabled", false);
+        $(".step-0 select").prop("disabled", false);
+        $(".step-1 input").prop("disabled", false);
+        $(".step-1 select").prop("disabled", false);
       }
     } else {
       console.log("Fields have not been filled correctly");
     }
   });
 
-  form.addEventListener('keypress', function (e) {
-    if (currentStep !== 2 && e.keyCode === 13) {
+  // add event listener and prevent for enter key
+  $("form[name='devis']").on("keypress", function (e) {
+    if (currentStep != 2 && e.which == 13) {
       e.preventDefault();
     }
   });

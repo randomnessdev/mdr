@@ -47,18 +47,18 @@ $(document).ready(function () {
     let step = $(this).attr("class").split(" ")[1].split("-")[1];
     // step to int
     step = parseInt(step);
-    console.log("step: " + step);
     // change the step to the one that was clicked
-    if (currentStep > step || $("form[name='devis']")[0].reportValidity() ) {
-      console.log(step);
-      console.log(currentStep);
+    if (currentStep > step || $("form[name='devis']")[0].reportValidity()) {
       changeStep(currentStep, step);
     } else {
       console.log("Fields have not been filled correctly");
       // create a toast for 2 seconds saying "Please fill the required fields before changing step"
       let toast = document.createElement("div");
-      toast.classList.add("custom-toast");
-      toast.innerHTML =
+      $(toast).addClass("alert");
+      $(toast).addClass("alert-danger");
+      $(toast).addClass("custom-toast");
+
+      toast.innerText =
         "Veuillez remplir les champs requis avant de changer d'étape";
       document.body.appendChild(toast);
       setTimeout(() => {
@@ -76,7 +76,7 @@ $(document).ready(function () {
   $;
 
   function changeStep(from, to) {
-    if ($("form[name='devis']")[0].reportValidity() ||from > to) {
+    if ($("form[name='devis']")[0].reportValidity() || from > to) {
       // add a class to the form named "step-" + (currentClass + 1)
       currentStep = from;
       $("form").removeClass("step-" + currentStep);
@@ -115,8 +115,8 @@ $(document).ready(function () {
 
   $(".next-step").click(function () {
     changeStep(currentStep, currentStep + 1);
-    console.log(currentStep)
   });
+
   // add event listener and prevent for enter key
   $("form[name='devis']").on("keypress", function (e) {
     if (currentStep != 2 && e.which == 13) {

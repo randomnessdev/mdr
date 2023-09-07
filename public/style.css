@@ -114,8 +114,9 @@ label.required:after {
 }
 @media screen and (max-width: 768px) {
   .stepper div {
-    padding: 1rem 1rem;
+    padding: 1rem 0rem;
     justify-content: left;
+    text-align: left;
   }
 }
 .stepper div.active {

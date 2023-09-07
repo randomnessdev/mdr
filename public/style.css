@@ -24,7 +24,7 @@ header {
 }
 
 body {
-  font-family: "Poppins", sans-serif !important; 
+  font-family: "Poppins", sans-serif !important;
   padding: 0 4em;
 }
 @media screen and (max-width: 768px) {
@@ -192,7 +192,7 @@ label.required:after {
 }
 
 .custom-toast {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   right: 0;

@@ -61,9 +61,9 @@ $(document).ready(function () {
       toast.innerText =
         "Veuillez remplir les champs requis avant de changer d'étape";
       document.body.appendChild(toast);
-      // setTimeout(() => {
-      //   document.body.removeChild(toast);
-      // }, 2000);
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 2000);
     }
   });
 
